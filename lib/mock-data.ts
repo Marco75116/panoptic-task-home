@@ -1,32 +1,44 @@
-import { SECONDS_PER_DAY, type Trade, type VaultDay } from './points'
+import {
+  SECONDS_PER_DAY,
+  deriveVaultDays,
+  type Trade,
+  type VaultDay,
+  type VaultEvent,
+} from './points'
 
 export type Profile = {
   name: string
   handle: string
   vault: VaultDay[]
+  vaultEvents: VaultEvent[]
   trades: Trade[]
 }
 
 const HOUR = 3600
+const WINDOW_DAYS = 30
 
-const vaultBalances = [
-  1000, 1000, 1000,
-  1500, 1500, 1500, 1500,
-  1500, 1500, 1500,
-  1000,
-  2000, 2000, 2000,
-  2500, 2500, 2500,
-  3000, 3000, 3000,
-  1500,
-  2500, 2500, 2500,
-  3000, 3000, 3000,
-  3500, 3500, 3500,
+const vaultEvents: VaultEvent[] = [
+  { day: 0, hour: 0, type: 'deposit', amount: 1000 },
+  { day: 3, hour: 0, type: 'deposit', amount: 500 },
+  // JIT attempt: huge late-day deposit, withdrawn before midnight.
+  // Day 7's min balance is unchanged because the rule looks at the daily minimum.
+  { day: 7, hour: 18, type: 'deposit', amount: 5000 },
+  { day: 7, hour: 23, type: 'withdraw', amount: 5000 },
+  { day: 10, hour: 0, type: 'withdraw', amount: 500 },
+  { day: 11, hour: 0, type: 'deposit', amount: 1000 },
+  { day: 14, hour: 0, type: 'deposit', amount: 500 },
+  { day: 17, hour: 0, type: 'deposit', amount: 500 },
+  { day: 20, hour: 0, type: 'withdraw', amount: 1500 },
+  { day: 21, hour: 0, type: 'deposit', amount: 1000 },
+  { day: 24, hour: 0, type: 'deposit', amount: 500 },
+  { day: 27, hour: 0, type: 'deposit', amount: 500 },
 ]
 
 export const profile: Profile = {
   name: 'Alex',
   handle: 'alex.eth',
-  vault: vaultBalances.map((minBalance, day) => ({ day, minBalance })),
+  vault: deriveVaultDays(vaultEvents, WINDOW_DAYS),
+  vaultEvents,
   trades: [
     {
       id: 'trade-1',

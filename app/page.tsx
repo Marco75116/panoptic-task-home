@@ -19,8 +19,10 @@ import {
   DailyAreaChart,
   type DailyPoint,
 } from '@/components/dashboard/daily-area-chart'
+import { TrackASection } from '@/components/dashboard/track-a-section'
 import { profile } from '@/lib/mock-data'
 import {
+  SECONDS_PER_DAY,
   tradeDayPoints,
   tradeHeldHours,
   tradePoints,
@@ -34,6 +36,13 @@ const fmtUsd = (n: number) =>
     currency: 'USD',
     maximumFractionDigits: 0,
   })
+const fmtDayTime = (sec: number) => {
+  const day = Math.floor(sec / SECONDS_PER_DAY)
+  const rem = sec - day * SECONDS_PER_DAY
+  const hh = String(Math.floor(rem / 3600)).padStart(2, '0')
+  const mm = String(Math.floor((rem % 3600) / 60)).padStart(2, '0')
+  return `Day ${day + 1} · ${hh}:${mm}`
+}
 
 export default function Home() {
   const trackAByDay = profile.vault.map((d) => vaultDayPoints(d))
@@ -47,17 +56,18 @@ export default function Home() {
   const shareA = total > 0 ? (totalA / total) * 100 : 0
   const shareB = total > 0 ? (totalB / total) * 100 : 0
 
-  let cumA = 0
-  let cumB = 0
-  const chartData: DailyPoint[] = profile.vault.map((d, i) => {
-    cumA += trackAByDay[i]
-    cumB += trackBByDay[i]
-    return {
-      day: `Day ${d.day + 1}`,
-      trackA: cumA,
-      trackB: cumB,
-    }
-  })
+  const chartData: DailyPoint[] = profile.vault.reduce<DailyPoint[]>(
+    (acc, d, i) => {
+      const prev = acc[acc.length - 1]
+      acc.push({
+        day: `Day ${d.day + 1}`,
+        trackA: (prev?.trackA ?? 0) + trackAByDay[i],
+        trackB: (prev?.trackB ?? 0) + trackBByDay[i],
+      })
+      return acc
+    },
+    [],
+  )
 
   return (
     <div className="min-h-full bg-muted/40 px-6 py-10">
@@ -134,41 +144,11 @@ export default function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <section>
-              <div className="mb-3 flex items-center gap-2">
-                <Badge variant="secondary">Track A · Vault</Badge>
-              </div>
-              <div className="overflow-hidden rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Day</TableHead>
-                      <TableHead>Min balance</TableHead>
-                      <TableHead>Held</TableHead>
-                      <TableHead className="text-right">Points</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {profile.vault.map((d, i) => (
-                      <TableRow key={d.day}>
-                        <TableCell className="font-medium">
-                          Day {d.day + 1}
-                        </TableCell>
-                        <TableCell className="font-mono tabular-nums">
-                          {fmtUsd(d.minBalance)}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          24 h
-                        </TableCell>
-                        <TableCell className="text-right font-mono tabular-nums">
-                          {fmt(trackAByDay[i])}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </section>
+            <TrackASection
+              vault={profile.vault}
+              events={profile.vaultEvents}
+              pointsByDay={trackAByDay}
+            />
 
             <Separator />
 
@@ -180,8 +160,9 @@ export default function Home() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Trade</TableHead>
                       <TableHead>Notional</TableHead>
+                      <TableHead>Opened</TableHead>
+                      <TableHead>Closed</TableHead>
                       <TableHead>Held</TableHead>
                       <TableHead className="text-right">Points</TableHead>
                     </TableRow>
@@ -189,11 +170,14 @@ export default function Home() {
                   <TableBody>
                     {profile.trades.map((t) => (
                       <TableRow key={t.id}>
-                        <TableCell className="font-mono text-xs text-muted-foreground">
-                          {t.id}
-                        </TableCell>
                         <TableCell className="font-mono tabular-nums">
                           {fmtUsd(t.notional)}
+                        </TableCell>
+                        <TableCell className="font-mono tabular-nums text-muted-foreground">
+                          {fmtDayTime(t.openSec)}
+                        </TableCell>
+                        <TableCell className="font-mono tabular-nums text-muted-foreground">
+                          {fmtDayTime(t.closeSec)}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
                           {tradeHeldHours(t)} h
@@ -206,7 +190,7 @@ export default function Home() {
                     {profile.trades.length === 0 ? (
                       <TableRow>
                         <TableCell
-                          colSpan={4}
+                          colSpan={5}
                           className="text-center text-muted-foreground"
                         >
                           No trades in this window.
