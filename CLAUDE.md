@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Subject
+
+This repo is a **Technical Assessment from [Panoptic](https://panoptic.xyz/)**. The exercise is designed to surface the engineering challenges Panoptic tackles and to evaluate technical approach and system-design skills.
+
+Subject-related docs are grouped under [`subject/`](./subject):
+- [`subject/instructions.md`](./subject/instructions.md) — full assignment brief (scope, deliverables, evaluation criteria). Read first.
+- [`subject/background.md`](./subject/background.md) — conceptual background on the HyperUnicorn protocol (perps, liquidity positions, synthetic exposure, funding).
+
+Reference material:
+- Docs: https://panoptic.xyz/docs/intro
+- Blog (articles that may help): https://panoptic.xyz/blog
+
 ## This is NOT the Next.js you know
 
 This project uses **Next.js 16.2.4** with **React 19.2.4**. APIs, conventions, and file structure may differ from your training data — there are breaking changes. Before writing or modifying Next.js / React code, read the relevant guide in `node_modules/next/dist/docs/` and heed any deprecation notices.
