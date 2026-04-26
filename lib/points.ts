@@ -10,11 +10,52 @@ export type VaultDay = {
   minBalance: number
 }
 
+export type VaultEvent = {
+  day: number
+  hour: number
+  type: 'deposit' | 'withdraw'
+  amount: number
+}
+
 export type Trade = {
   id: string
   notional: number
   openSec: number
   closeSec: number
+}
+
+export function deriveVaultDays(
+  events: VaultEvent[],
+  windowDays: number,
+): VaultDay[] {
+  const sorted = [...events].sort((a, b) =>
+    a.day === b.day ? a.hour - b.hour : a.day - b.day,
+  )
+
+  const days: VaultDay[] = []
+  let balance = 0
+  let i = 0
+
+  for (let day = 0; day < windowDays; day++) {
+    while (i < sorted.length && sorted[i].day === day && sorted[i].hour === 0) {
+      const e = sorted[i]
+      balance += e.type === 'deposit' ? e.amount : -e.amount
+      i++
+    }
+
+    let minForDay = balance
+
+    while (i < sorted.length && sorted[i].day === day) {
+      const e = sorted[i]
+      balance += e.type === 'deposit' ? e.amount : -e.amount
+      minForDay = Math.min(minForDay, balance)
+      i++
+    }
+
+    days.push({ day, minBalance: Math.max(0, minForDay) })
+  }
+
+  return days
 }
 
 export function vaultDayPoints(d: VaultDay): number {
