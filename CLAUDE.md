@@ -39,3 +39,11 @@ No test runner is configured.
 - **TypeScript** uses the `@/*` path alias mapped to the repo root (see `tsconfig.json`), so imports like `@/app/...` resolve from the project root.
 - **Static assets** live in `public/` and are served from `/`.
 - `.context/` is gitignored and used to share files with other agents in the Conductor workspace.
+
+## UI: shadcn/ui
+
+This project uses **[shadcn/ui](https://ui.shadcn.com)** for UI primitives. Components live in `components/ui/` and are checked into the repo (not a runtime dependency — shadcn copies source). Configuration is in `components.json`.
+
+- Add a component: `bunx --bun shadcn@latest add <name>` (e.g. `card`, `table`, `chart`). Always go through the CLI so dependencies and styles are wired correctly — do not hand-write files in `components/ui/`.
+- Charts use **Recharts** under the hood; pull them via `bunx --bun shadcn@latest add chart` and reference the gallery at https://ui.shadcn.com/charts.
+- Utility helper `cn()` is at `lib/utils.ts`.
