@@ -88,12 +88,13 @@ export function TrackASection({
         </TabsContent>
 
         <TabsContent value="activity" className="mt-3">
-          <p className="mb-3 text-xs text-muted-foreground">
-            Points are scored on each day&apos;s <strong>minimum</strong>{' '}
-            balance — deposits made late in a day only start counting from the
-            next day. Watch Day 8 for a same-day deposit/withdraw that earns
-            nothing.
-          </p>
+          {eventsWithBalance.length > 0 ? (
+            <p className="mb-3 text-xs text-muted-foreground">
+              Points are scored on each day&apos;s <strong>minimum</strong>{' '}
+              balance — deposits made late in a day only start counting from
+              the next day.
+            </p>
+          ) : null}
           <div className="overflow-hidden rounded-md border">
             <Table>
               <TableHeader>
@@ -135,6 +136,16 @@ export function TrackASection({
                     </TableCell>
                   </TableRow>
                 ))}
+                {eventsWithBalance.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="text-center text-muted-foreground"
+                    >
+                      No vault activity in this window.
+                    </TableCell>
+                  </TableRow>
+                ) : null}
               </TableBody>
             </Table>
           </div>

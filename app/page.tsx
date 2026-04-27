@@ -99,7 +99,7 @@ export default function Home() {
             value={profileId}
             onValueChange={(v) => v && setProfileId(v)}
           >
-            <SelectTrigger className="h-9 min-w-[260px] rounded-full bg-background pl-3 pr-3">
+            <SelectTrigger className="h-9 rounded-full bg-background pl-3 pr-3">
               <span className="size-2 shrink-0 rounded-full bg-emerald-500" />
               <SelectValue placeholder="Select customer">
                 <span className="font-medium">{profile.name}</span>
