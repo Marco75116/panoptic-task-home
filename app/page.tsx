@@ -1,3 +1,6 @@
+'use client'
+
+import { useMemo, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -6,6 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import {
   Table,
@@ -20,7 +30,7 @@ import {
   type DailyPoint,
 } from '@/components/dashboard/daily-area-chart'
 import { TrackASection } from '@/components/dashboard/track-a-section'
-import { profile } from '@/lib/mock-data'
+import { profiles, shortAddress } from '@/lib/mock-data'
 import {
   SECONDS_PER_DAY,
   tradeDayPoints,
@@ -45,6 +55,12 @@ const fmtDayTime = (sec: number) => {
 }
 
 export default function Home() {
+  const [profileId, setProfileId] = useState(profiles[0].id)
+  const profile = useMemo(
+    () => profiles.find((p) => p.id === profileId) ?? profiles[0],
+    [profileId],
+  )
+
   const trackAByDay = profile.vault.map((d) => vaultDayPoints(d))
   const trackBByDay = profile.vault.map((d) =>
     profile.trades.reduce((sum, t) => sum + tradeDayPoints(t, d.day), 0),
@@ -79,11 +95,30 @@ export default function Home() {
             </p>
             <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
           </div>
-          <div className="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-sm">
-            <span className="size-2 rounded-full bg-emerald-500" />
-            <span className="font-medium">{profile.name}</span>
-            <span className="text-muted-foreground">{profile.handle}</span>
-          </div>
+          <Select
+            value={profileId}
+            onValueChange={(v) => v && setProfileId(v)}
+          >
+            <SelectTrigger className="h-9 rounded-full bg-background pl-3 pr-3">
+              <span className="size-2 shrink-0 rounded-full bg-emerald-500" />
+              <SelectValue placeholder="Select customer">
+                <span className="font-medium">{profile.name}</span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {shortAddress(profile.address)}
+                </span>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {profiles.map((p) => (
+                <SelectItem key={p.id} value={p.id}>
+                  <span className="font-medium">{p.name}</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {shortAddress(p.address)}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </header>
 
         <Card>
