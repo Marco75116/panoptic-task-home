@@ -30,7 +30,7 @@ import {
   type DailyPoint,
 } from '@/components/dashboard/daily-area-chart'
 import { TrackASection } from '@/components/dashboard/track-a-section'
-import { profiles } from '@/lib/mock-data'
+import { profiles, shortAddress } from '@/lib/mock-data'
 import {
   SECONDS_PER_DAY,
   tradeDayPoints,
@@ -99,15 +99,22 @@ export default function Home() {
             value={profileId}
             onValueChange={(v) => v && setProfileId(v)}
           >
-            <SelectTrigger className="rounded-full bg-background pl-3">
-              <span className="size-2 rounded-full bg-emerald-500" />
-              <SelectValue placeholder="Select customer" />
+            <SelectTrigger className="h-9 min-w-[260px] rounded-full bg-background pl-3 pr-3">
+              <span className="size-2 shrink-0 rounded-full bg-emerald-500" />
+              <SelectValue placeholder="Select customer">
+                <span className="font-medium">{profile.name}</span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {shortAddress(profile.address)}
+                </span>
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {profiles.map((p) => (
                 <SelectItem key={p.id} value={p.id}>
                   <span className="font-medium">{p.name}</span>
-                  <span className="text-muted-foreground">{p.handle}</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {shortAddress(p.address)}
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>
