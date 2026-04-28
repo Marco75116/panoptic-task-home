@@ -78,3 +78,14 @@ Same window, **no modulo** — `held` runs at hour granularity, not bound to who
 | Eve (intraday)   | $2,000     | 6 h    | 250,000        |
 
 Worked examples — Dave: `floor(500 × 5.0 × (10 × 3,600) × 1.0 × (100/86,400)) = 104,166`. Eve: `2,000 × 5.0 × (6 × 3,600) × 1.0 × (100/86,400) = 250,000`.
+
+# Run locally
+
+```bash
+git clone https://github.com/Marco75116/panoptic-task-home.git
+cd panoptic-task-home
+bun i
+bun dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
