@@ -79,6 +79,24 @@ Same window, **no modulo** — `held` runs at hour granularity, not bound to who
 
 Worked examples — Dave: `floor(500 × 5.0 × (10 × 3,600) × 1.0 × (100/86,400)) = 104,166`. Eve: `2,000 × 5.0 × (6 × 3,600) × 1.0 × (100/86,400) = 250,000`.
 
+# Questions
+
+### How I approached the problem
+
+I tried to build a single global formula for the points system, anchored on the USD value interacted with the HyperUnicorn protocol. On top of that, I added a few constants so the protocol can encode strategy — deciding what to incentivize — while keeping the formula fair across both kinds of users.
+
+### What decisions I made and why
+
+The main decisions were around the constants in the formula:
+
+- **Weight `w_B = 5.0` vs `w_A = 1.0`** — incentivize traders more per dollar-second, since they take active risk and pay protocol fees.
+- **`scale = 100 / 86_400`** — calibrated so points land in big, readable whole numbers (e.g. `$1 × 1 day ≈ 100 points`) rather than decimals.
+- **`boost = 1.0`** as the baseline — the lever exists in the formula so the protocol can later steer rewards toward specific pools or assets without changing the design.
+
+### Concerns / edge cases
+
+For a more elaborate points system spanning multiple perp products, the fairest approach would be to base trader points on the **fees they actually generate for the protocol** rather than on notional × time. Fees align points directly with protocol revenue and naturally scale with product, leverage, and venue — whereas notional-time can over-reward low-fee, high-notional positions that don't actually pay the protocol much.
+
 # Run locally
 
 ```bash
