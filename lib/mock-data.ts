@@ -22,6 +22,7 @@ export const shortAddress = (addr: string) =>
 const HOUR = 3600
 const WINDOW_DAYS = 30
 
+// ---------- Alex — LP with a JIT attempt on day 7 ----------
 const alexEvents: VaultEvent[] = [
   { day: 0, hour: 0, type: 'deposit', amount: 1000 },
   { day: 3, hour: 0, type: 'deposit', amount: 500 },
@@ -39,54 +40,46 @@ const alexEvents: VaultEvent[] = [
   { day: 27, hour: 0, type: 'deposit', amount: 500 },
 ]
 
-const alex: Profile = {
-  id: 'alex',
-  name: 'Alex',
-  handle: 'alex.eth',
-  address: '0xA1ec0f3b8d2a9e4f5c1d8b7a6e3f9c2d1b4a5e6f',
-  vault: deriveVaultDays(alexEvents, WINDOW_DAYS),
-  vaultEvents: alexEvents,
-  trades: [
-    {
-      id: 'trade-1',
-      notional: 500,
-      openSec: 2 * SECONDS_PER_DAY + 12 * HOUR,
-      closeSec: 3 * SECONDS_PER_DAY + 12 * HOUR,
-    },
-    {
-      id: 'trade-2',
-      notional: 2000,
-      openSec: 5 * SECONDS_PER_DAY + 6 * HOUR,
-      closeSec: 5 * SECONDS_PER_DAY + 14 * HOUR,
-    },
-    {
-      id: 'trade-3',
-      notional: 1500,
-      openSec: 11 * SECONDS_PER_DAY + 9 * HOUR,
-      closeSec: 12 * SECONDS_PER_DAY + 9 * HOUR,
-    },
-    {
-      id: 'trade-4',
-      notional: 3000,
-      openSec: 17 * SECONDS_PER_DAY + 14 * HOUR,
-      closeSec: 17 * SECONDS_PER_DAY + 22 * HOUR,
-    },
-    {
-      id: 'trade-5',
-      notional: 1000,
-      openSec: 23 * SECONDS_PER_DAY + 6 * HOUR,
-      closeSec: 25 * SECONDS_PER_DAY + 6 * HOUR,
-    },
-    {
-      id: 'trade-6',
-      notional: 5000,
-      openSec: 28 * SECONDS_PER_DAY + 10 * HOUR,
-      closeSec: 28 * SECONDS_PER_DAY + 18 * HOUR,
-    },
-  ],
-}
+const alexTrades: Trade[] = [
+  {
+    id: 'trade-1',
+    notional: 500,
+    openSec: 2 * SECONDS_PER_DAY + 12 * HOUR,
+    closeSec: 3 * SECONDS_PER_DAY + 12 * HOUR,
+  },
+  {
+    id: 'trade-2',
+    notional: 2000,
+    openSec: 5 * SECONDS_PER_DAY + 6 * HOUR,
+    closeSec: 5 * SECONDS_PER_DAY + 14 * HOUR,
+  },
+  {
+    id: 'trade-3',
+    notional: 1500,
+    openSec: 11 * SECONDS_PER_DAY + 9 * HOUR,
+    closeSec: 12 * SECONDS_PER_DAY + 9 * HOUR,
+  },
+  {
+    id: 'trade-4',
+    notional: 3000,
+    openSec: 17 * SECONDS_PER_DAY + 14 * HOUR,
+    closeSec: 17 * SECONDS_PER_DAY + 22 * HOUR,
+  },
+  {
+    id: 'trade-5',
+    notional: 1000,
+    openSec: 23 * SECONDS_PER_DAY + 6 * HOUR,
+    closeSec: 25 * SECONDS_PER_DAY + 6 * HOUR,
+  },
+  {
+    id: 'trade-6',
+    notional: 5000,
+    openSec: 28 * SECONDS_PER_DAY + 10 * HOUR,
+    closeSec: 28 * SECONDS_PER_DAY + 18 * HOUR,
+  },
+]
 
-// Maya — pure trader. No vault deposits, all Track B.
+// ---------- Maya — pure trader, no vault deposits, all Track B ----------
 const mayaEvents: VaultEvent[] = []
 
 const mayaTrades: Trade[] = [
@@ -126,17 +119,7 @@ const mayaTrades: Trade[] = [
   { id: 'm-27', notional: 6500, openSec: 28 * SECONDS_PER_DAY + 9 * HOUR, closeSec: 29 * SECONDS_PER_DAY + 18 * HOUR },
 ]
 
-const maya: Profile = {
-  id: 'maya',
-  name: 'Maya',
-  handle: 'maya.trades',
-  address: '0x9d4b2e7c1a8f3e5d6c2b9a7f4e1d8c5b3a6f2e9d',
-  vault: deriveVaultDays(mayaEvents, WINDOW_DAYS),
-  vaultEvents: mayaEvents,
-  trades: mayaTrades,
-}
-
-// Sora — balanced LP/trader. Steady vault growth + a handful of mid-size trades.
+// ---------- Sora — balanced LP/trader, steady vault growth + mid-size trades ----------
 const soraEvents: VaultEvent[] = [
   { day: 0, hour: 0, type: 'deposit', amount: 4000 },
   { day: 5, hour: 0, type: 'deposit', amount: 2000 },
@@ -148,40 +131,24 @@ const soraEvents: VaultEvent[] = [
   { day: 28, hour: 0, type: 'deposit', amount: 1000 },
 ]
 
-const sora: Profile = {
-  id: 'sora',
-  name: 'Sora',
-  handle: 'sora.lens',
-  address: '0x4f2a1b5c7d8e9f0a3b2c1d4e5f6a7b8c9d0e1f2a',
-  vault: deriveVaultDays(soraEvents, WINDOW_DAYS),
-  vaultEvents: soraEvents,
-  trades: [
-    { id: 's-01', notional: 1500, openSec: 1 * SECONDS_PER_DAY + 10 * HOUR, closeSec: 2 * SECONDS_PER_DAY + 10 * HOUR },
-    { id: 's-02', notional: 3000, openSec: 6 * SECONDS_PER_DAY + 9 * HOUR, closeSec: 7 * SECONDS_PER_DAY + 17 * HOUR },
-    { id: 's-03', notional: 2000, openSec: 10 * SECONDS_PER_DAY + 13 * HOUR, closeSec: 10 * SECONDS_PER_DAY + 19 * HOUR },
-    { id: 's-04', notional: 4500, openSec: 14 * SECONDS_PER_DAY + 8 * HOUR, closeSec: 15 * SECONDS_PER_DAY + 14 * HOUR },
-    { id: 's-05', notional: 2500, openSec: 20 * SECONDS_PER_DAY + 11 * HOUR, closeSec: 20 * SECONDS_PER_DAY + 18 * HOUR },
-    { id: 's-06', notional: 3500, openSec: 25 * SECONDS_PER_DAY + 14 * HOUR, closeSec: 26 * SECONDS_PER_DAY + 9 * HOUR },
-    { id: 's-07', notional: 2000, openSec: 29 * SECONDS_PER_DAY + 10 * HOUR, closeSec: 29 * SECONDS_PER_DAY + 16 * HOUR },
-  ],
-}
+const soraTrades: Trade[] = [
+  { id: 's-01', notional: 1500, openSec: 1 * SECONDS_PER_DAY + 10 * HOUR, closeSec: 2 * SECONDS_PER_DAY + 10 * HOUR },
+  { id: 's-02', notional: 3000, openSec: 6 * SECONDS_PER_DAY + 9 * HOUR, closeSec: 7 * SECONDS_PER_DAY + 17 * HOUR },
+  { id: 's-03', notional: 2000, openSec: 10 * SECONDS_PER_DAY + 13 * HOUR, closeSec: 10 * SECONDS_PER_DAY + 19 * HOUR },
+  { id: 's-04', notional: 4500, openSec: 14 * SECONDS_PER_DAY + 8 * HOUR, closeSec: 15 * SECONDS_PER_DAY + 14 * HOUR },
+  { id: 's-05', notional: 2500, openSec: 20 * SECONDS_PER_DAY + 11 * HOUR, closeSec: 20 * SECONDS_PER_DAY + 18 * HOUR },
+  { id: 's-06', notional: 3500, openSec: 25 * SECONDS_PER_DAY + 14 * HOUR, closeSec: 26 * SECONDS_PER_DAY + 9 * HOUR },
+  { id: 's-07', notional: 2000, openSec: 29 * SECONDS_PER_DAY + 10 * HOUR, closeSec: 29 * SECONDS_PER_DAY + 16 * HOUR },
+]
 
-// Ravi — whale LP. One big day-0 deposit, holds untouched, no trades.
+// ---------- Ravi — whale LP, one big day-0 deposit, no trades ----------
 const raviEvents: VaultEvent[] = [
   { day: 0, hour: 0, type: 'deposit', amount: 25000 },
 ]
 
-const ravi: Profile = {
-  id: 'ravi',
-  name: 'Ravi',
-  handle: 'ravi.eth',
-  address: '0xC0fee9b8d7f1e3a4c2b6d8e1a9f4b7c3d5e2a8f1',
-  vault: deriveVaultDays(raviEvents, WINDOW_DAYS),
-  vaultEvents: raviEvents,
-  trades: [],
-}
+const raviTrades: Trade[] = []
 
-// Jin — micro-scalper. Tiny collateral, many very short positions every day.
+// ---------- Jin — micro-scalper, tiny collateral, many short positions ----------
 const jinEvents: VaultEvent[] = [
   { day: 0, hour: 0, type: 'deposit', amount: 1500 },
   { day: 14, hour: 0, type: 'deposit', amount: 500 },
@@ -228,6 +195,48 @@ const jinTrades: Trade[] = [
   { id: 'j-31', notional: 1000, openSec: 27 * SECONDS_PER_DAY + 11 * HOUR, closeSec: 27 * SECONDS_PER_DAY + 12 * HOUR },
   { id: 'j-32', notional: 1200, openSec: 29 * SECONDS_PER_DAY + 13 * HOUR, closeSec: 29 * SECONDS_PER_DAY + 14 * HOUR + 10 * 60 },
 ]
+
+// ---------- Profiles ----------
+
+const alex: Profile = {
+  id: 'alex',
+  name: 'Alex',
+  handle: 'alex.eth',
+  address: '0xA1ec0f3b8d2a9e4f5c1d8b7a6e3f9c2d1b4a5e6f',
+  vault: deriveVaultDays(alexEvents, WINDOW_DAYS),
+  vaultEvents: alexEvents,
+  trades: alexTrades,
+}
+
+const maya: Profile = {
+  id: 'maya',
+  name: 'Maya',
+  handle: 'maya.trades',
+  address: '0x9d4b2e7c1a8f3e5d6c2b9a7f4e1d8c5b3a6f2e9d',
+  vault: deriveVaultDays(mayaEvents, WINDOW_DAYS),
+  vaultEvents: mayaEvents,
+  trades: mayaTrades,
+}
+
+const sora: Profile = {
+  id: 'sora',
+  name: 'Sora',
+  handle: 'sora.lens',
+  address: '0x4f2a1b5c7d8e9f0a3b2c1d4e5f6a7b8c9d0e1f2a',
+  vault: deriveVaultDays(soraEvents, WINDOW_DAYS),
+  vaultEvents: soraEvents,
+  trades: soraTrades,
+}
+
+const ravi: Profile = {
+  id: 'ravi',
+  name: 'Ravi',
+  handle: 'ravi.eth',
+  address: '0xC0fee9b8d7f1e3a4c2b6d8e1a9f4b7c3d5e2a8f1',
+  vault: deriveVaultDays(raviEvents, WINDOW_DAYS),
+  vaultEvents: raviEvents,
+  trades: raviTrades,
+}
 
 const jin: Profile = {
   id: 'jin',
