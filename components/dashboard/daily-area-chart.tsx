@@ -28,6 +28,9 @@ const compact = new Intl.NumberFormat('en', {
 })
 
 export function DailyAreaChart({ data }: { data: DailyPoint[] }) {
+  const hasTrackA = data.some((d) => d.trackA > 0)
+  const hasTrackB = data.some((d) => d.trackB > 0)
+
   return (
     <ChartContainer config={chartConfig} className="h-[280px] w-full">
       <AreaChart data={data} margin={{ left: 8, right: 16, top: 12, bottom: 0 }}>
@@ -61,20 +64,24 @@ export function DailyAreaChart({ data }: { data: DailyPoint[] }) {
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}
         />
-        <Area
-          dataKey="trackA"
-          type="monotone"
-          fill="url(#fillTrackA)"
-          stroke="var(--color-trackA)"
-          stackId="points"
-        />
-        <Area
-          dataKey="trackB"
-          type="monotone"
-          fill="url(#fillTrackB)"
-          stroke="var(--color-trackB)"
-          stackId="points"
-        />
+        {hasTrackA ? (
+          <Area
+            dataKey="trackA"
+            type="monotone"
+            fill="url(#fillTrackA)"
+            stroke="var(--color-trackA)"
+            stackId="points"
+          />
+        ) : null}
+        {hasTrackB ? (
+          <Area
+            dataKey="trackB"
+            type="monotone"
+            fill="url(#fillTrackB)"
+            stroke="var(--color-trackB)"
+            stackId="points"
+          />
+        ) : null}
         <ChartLegend content={<ChartLegendContent />} />
       </AreaChart>
     </ChartContainer>

@@ -170,13 +170,6 @@ export default function Home() {
         <Card>
           <CardHeader>
             <CardTitle>Score breakdown</CardTitle>
-            <CardDescription>
-              Every row shows the inputs to the formula{' '}
-              <code className="rounded bg-muted px-1 py-0.5 text-xs">
-                value × weight × time × boost × scale
-              </code>
-              .
-            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <TrackASection
